@@ -1,5 +1,7 @@
 # PictsManager
 
+## This project is a school project, create with Gabiel B. and Gabriel R.
+
 ![Logo](https://cdn.discordapp.com/attachments/959024336075898903/992883530013102181/telechargement.png)
 
 ## Qu'est-ce que le PictsManager ?
