@@ -1,0 +1,63 @@
+version: '3.3'
+
+services:
+
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: pict-password
+      POSTGRES_USER: pict-manager
+      POSTGRES_DB: pict-db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./tmp/postgres-data:/var/lib/postgresql/data
+        # type: bind
+        # source: ./tmp/postgres-data
+        # target: /var/lib/postgresql/data
+  
+  flask:
+    build: compression/.
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    environment:
+      - FLASK_APP=compression
+      - FLASK_ENV=production
+      - FLASK_DEBUG=1
+    depends_on: 
+      - "server"
+
+  server:
+    build: server/.
+    restart: unless-stopped
+    command: sh -c "/wait && npm run start"
+    environment:
+      - WAIT_HOSTS=db:5432
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=2
+      - WAIT_HOST_CONNECT_TIMEOUT=5
+      - HOST=db
+    depends_on:
+      - db
+    ports: 
+      - "8080:8080"
+    links:
+      - db
+    volumes:
+      -
+        type: bind
+        source: ./public
+        target: /public
+
+  mobile:
+    build: ./mobile
+    depends_on:
+      - server
+    volumes:
+      -
+        type: bind
+        source: ./public
+        target: /public

@@ -1,0 +1,8 @@
+Flask
+Flask-Cors==3.0.10
+Pillow==7.1.2
+scikit-image==0.18.3
+scikit-learn==1.0.2
+sklearn==0.0
+numpy==1.21.6
+
